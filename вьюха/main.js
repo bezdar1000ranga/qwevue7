@@ -21,15 +21,19 @@ Vue.component('product', {
                 <div v-for="size in sizes">
                     <p>{{ size }}</p>
                 </div>
-  
-                <button v-on:click="addToCart" :disabled="!inStock" :class="{ disabledButton: !inStock }">Add to cart</button>
-                <button v-on:click="removeFromCart">remove from cart</button>
+                <div class="product-btn">
+                    
+                    <button v-on:click="addToCart" :disabled="!inStock" :class="{ disabledButton: !inStock }">Add to cart</button>
+                    <button v-on:click="removeFromCart">remove from cart</button>
+
+                </div>
   
             </div>
   
             <div>
                 <product-tabs :shipping="shipping" :reviews="reviews"></product-tabs>
-            <a v-bind:href="link"> {{ linkText }}</a>
+                <a v-bind:href="link"> {{ linkText }}</a>
+            </div>
         </div>`,
     data() {
         return {
@@ -95,8 +99,15 @@ Vue.component('product', {
     },
     mounted() {
         eventBus.$on('review-submitted', productReview => {
-            this.reviews.push(productReview)
-        })
+            this.reviews.push(productReview);
+            localStorage.setItem('reviews', JSON.stringify(this.reviews));
+        });
+    
+        // Initialize the reviews array from local storage
+        const storedReviews = localStorage.getItem('reviews');
+        if (storedReviews) {
+            this.reviews = JSON.parse(storedReviews);
+        }
     }
     })
 Vue.component('product-detail', {
@@ -227,7 +238,9 @@ Vue.component('product-tabs', {
 
 })
 let eventBus = new Vue()
-
+let localkey = 'review-code';
+let storageData = localStorage.getItem(localkey);
+let initialData = storageData ? JSON.parse(storageData): {array: [],};
 
 let app = new Vue({
     el: "#app",

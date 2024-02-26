@@ -46,8 +46,13 @@ img {
     padding: 10px 20px;
 }
 
-button {
+.product-btn{
     margin-top: 50px;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+button {
     border: none;
     background-color: #1E95EA;
     color: white;
